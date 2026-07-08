@@ -15,7 +15,8 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 4173',
+    command:
+      'npx cross-env VITE_DATA_SOURCE=mock npm run dev:client -- --host 127.0.0.1 --port 4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     url: 'http://127.0.0.1:4173',

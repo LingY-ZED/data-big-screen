@@ -10,7 +10,7 @@
         <span>{{ displayUnit }}</span>
       </div>
       <p class="metric-trend" :class="`metric-trend-${metric.trend}`">
-        {{ metric.trend === 'down' ? '较昨日' : '同比增长' }} {{ trendText }}
+        {{ trendLabel }} {{ trendText }}
       </p>
     </div>
   </article>
@@ -36,6 +36,13 @@ const displayValue = computed(() => {
 
 const displayUnit = computed(() => props.metric.unit ?? '')
 const trendText = computed(() => formatTrend(props.metric.delta))
+const trendLabel = computed(() => {
+  if (props.metric.trend === 'stable') {
+    return '基线变化'
+  }
+
+  return props.metric.trend === 'down' ? '压力下降' : '压力上升'
+})
 </script>
 
 <style scoped>

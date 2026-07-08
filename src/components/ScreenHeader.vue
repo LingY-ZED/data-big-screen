@@ -2,11 +2,11 @@
   <header class="screen-header">
     <div class="header-side">
       <span class="status-dot" />
-      <span>Mock 数据源 · 可切换真实 API</span>
+      <span>MySQL 数据源 · 实时聚合 API</span>
     </div>
     <div class="title-wrap">
-      <h1>数据视界中枢大屏 <span class="product-name">DataVisionLab</span></h1>
-      <p>Vue 3 · Vite · TypeScript · ECharts 教学型数据可视化项目</p>
+      <h1>数据中心运行监控大屏 <span class="product-name">DataVisionLab</span></h1>
+      <p>主机 · CPU · 内存 · 磁盘 · 网络 · 运行告警</p>
     </div>
     <div class="header-time">
       <span class="current-time">{{ currentTime }}</span>

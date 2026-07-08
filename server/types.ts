@@ -1,16 +1,35 @@
+export interface HostRow {
+  hostId: string
+  hostname: string
+  locationRoom: string
+  model: string
+  owner: string
+  rack: string
+}
+
+export interface MetricPointRow {
+  hostId: string
+  metricType: string
+  mod: string
+  sampledAt: string
+  tag: string
+  ts: number
+  value: number
+}
+
 export type MetricTrend = 'down' | 'stable' | 'up'
 export type MetricStatus = 'danger' | 'success' | 'warning'
 export type ActivityLevel = 'error' | 'info' | 'success' | 'warning'
 export type MapNodeStatus = 'busy' | 'normal' | 'risk'
 
 export interface SummaryMetric {
+  delta: number
   id: string
   label: string
-  value: number
-  unit?: string
-  delta: number
-  trend: MetricTrend
   status: MetricStatus
+  trend: MetricTrend
+  unit?: string
+  value: number
 }
 
 export interface TrendPoint {
@@ -80,4 +99,10 @@ export interface DashboardData {
   rankings: RankingItem[]
   trends: TrendPoint[]
   updatedAt: string
+}
+
+export interface DashboardInput {
+  diskPoints: MetricPointRow[]
+  hosts: HostRow[]
+  prefPoints: MetricPointRow[]
 }

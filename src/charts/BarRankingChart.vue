@@ -25,7 +25,7 @@ const { render } = useEChart(chartRef, (): EChartsOption => ({
     top: 22,
   },
   tooltip: {
-    formatter: '{b}<br />访问量：{c}',
+    formatter: '{b}<br />1分钟负载：{c}',
     trigger: 'axis',
   },
   xAxis: {
@@ -50,7 +50,7 @@ const { render } = useEChart(chartRef, (): EChartsOption => ({
     axisTick: {
       show: false,
     },
-    data: props.data.map((item) => item.city).reverse(),
+    data: props.data.map((item) => item.name).reverse(),
     type: 'category',
   },
   series: [
@@ -71,7 +71,7 @@ const { render } = useEChart(chartRef, (): EChartsOption => ({
         position: 'right',
         show: true,
       },
-      name: '城市访问量',
+      name: '主机负载',
       type: 'bar',
     },
   ],

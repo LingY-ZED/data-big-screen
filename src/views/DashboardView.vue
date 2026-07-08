@@ -8,27 +8,27 @@
       </section>
 
       <section class="dashboard-content" aria-label="数据可视化区域">
-        <BasePanel class="trend-panel" title="访问趋势" subtitle="Visits / Orders / Active Users">
+        <BasePanel class="trend-panel" title="资源趋势" subtitle="CPU / Memory / Network">
           <LineTrendChart :data="trends" />
         </BasePanel>
 
-        <BasePanel class="pie-panel" title="分类占比" subtitle="Learning content distribution">
+        <BasePanel class="pie-panel" title="机房主机分布" subtitle="Hosts by room">
           <PieStatusChart :data="categories" />
         </BasePanel>
 
-        <BasePanel class="map-panel" title="中心态势总览" subtitle="Realtime topology overview">
+        <BasePanel class="map-panel" title="机房运行态势" subtitle="Realtime data center overview">
           <MapOverviewChart :data="map" />
         </BasePanel>
 
-        <BasePanel class="ranking-panel" title="城市排名" subtitle="City traffic ranking">
+        <BasePanel class="ranking-panel" title="主机负载排名" subtitle="Top load average hosts">
           <BarRankingChart :data="rankings" />
         </BasePanel>
 
-        <BasePanel class="radar-panel" title="能力雷达" subtitle="System capability model">
+        <BasePanel class="radar-panel" title="资源健康雷达" subtitle="Resource health model">
           <RadarAbilityChart :data="radar" />
         </BasePanel>
 
-        <BasePanel class="activity-panel" title="实时动态" subtitle="Activity & alerts">
+        <BasePanel class="activity-panel" title="实时告警" subtitle="Events & alerts">
           <ul class="activity-list">
             <li
               v-for="activity in activities"
@@ -100,7 +100,7 @@ onMounted(() => {
 
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px;
   min-width: 0;
 }

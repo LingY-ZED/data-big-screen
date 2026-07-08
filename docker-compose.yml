@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: datacenter-monitor-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: datacenter_monitor
+      MYSQL_USER: datacenter
+      MYSQL_PASSWORD: datacenter_pass
+      TZ: Asia/Shanghai
+    ports:
+      - '3307:3306'
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - datacenter_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-udatacenter', '-pdatacenter_pass']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  datacenter_mysql_data:

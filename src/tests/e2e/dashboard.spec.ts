@@ -15,7 +15,7 @@ test('renders the DataVisionLab dashboard', async ({ page }) => {
 
   await page.goto('/')
 
-  await expect(page.getByRole('heading', { name: /数据视界中枢大屏/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /数据中心运行监控大屏/ })).toBeVisible()
   await expect(page.getByTestId('metric-card').first()).toBeVisible()
   await expect(page.getByTestId('chart-line')).toBeVisible()
   await expect(page.locator('canvas').first()).toBeVisible()

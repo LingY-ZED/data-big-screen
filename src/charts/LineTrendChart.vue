@@ -28,11 +28,11 @@ const { render } = useEChart(chartRef, (): EChartsOption => {
 
   return {
     backgroundColor: 'transparent',
-    color: ['#24d7ff', '#45f0a0', '#ffcf5a'],
+    color: ['#24d7ff', '#45f0a0', '#ffcf5a', '#5b8cff'],
     grid: {
       bottom: 32,
       left: 44,
-      right: 20,
+      right: 48,
       top: 42,
     },
     legend: {
@@ -64,44 +64,77 @@ const { render } = useEChart(chartRef, (): EChartsOption => {
       data: labels,
       type: 'category',
     },
-    yAxis: {
-      axisLabel: {
-        color: '#89b8c9',
-      },
-      splitLine: {
-        lineStyle: {
-          color: 'rgba(137, 184, 201, 0.14)',
+    yAxis: [
+      {
+        axisLabel: {
+          color: '#89b8c9',
+          formatter: '{value}%',
         },
+        max: 100,
+        min: 0,
+        name: '使用率',
+        nameTextStyle: {
+          color: '#89b8c9',
+        },
+        splitLine: {
+          lineStyle: {
+            color: 'rgba(137, 184, 201, 0.14)',
+          },
+        },
+        type: 'value',
       },
-      type: 'value',
-    },
+      {
+        axisLabel: {
+          color: '#89b8c9',
+        },
+        name: 'MB/s',
+        nameTextStyle: {
+          color: '#89b8c9',
+        },
+        splitLine: {
+          show: false,
+        },
+        type: 'value',
+      },
+    ],
     series: [
       {
         areaStyle: {
           color: createArea('rgba(36, 215, 255, 0.32)'),
         },
-        data: props.data.map((item) => item.visits),
-        name: '访问量',
+        data: props.data.map((item) => item.cpuUsage),
+        name: 'CPU使用率',
         showSymbol: false,
         smooth: true,
         type: 'line',
+        yAxisIndex: 0,
       },
       {
         areaStyle: {
           color: createArea('rgba(69, 240, 160, 0.2)'),
         },
-        data: props.data.map((item) => item.activeUsers),
-        name: '活跃用户',
+        data: props.data.map((item) => item.memoryUsage),
+        name: '内存使用率',
         showSymbol: false,
         smooth: true,
         type: 'line',
+        yAxisIndex: 0,
       },
       {
-        data: props.data.map((item) => item.orders),
-        name: '订单数',
+        data: props.data.map((item) => item.networkIn),
+        name: '入站带宽',
         showSymbol: false,
         smooth: true,
         type: 'line',
+        yAxisIndex: 1,
+      },
+      {
+        data: props.data.map((item) => item.networkOut),
+        name: '出站带宽',
+        showSymbol: false,
+        smooth: true,
+        type: 'line',
+        yAxisIndex: 1,
       },
     ],
   }

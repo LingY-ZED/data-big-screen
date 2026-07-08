@@ -1,49 +1,71 @@
-# 数据大屏 DataVisionLab
+# 数据中心运行监控大屏 DataVisionLab
 
-一个公开开源的教学型数据可视化大屏项目，用于帮助学生和初学者从 0 到 1 学习如何使用现代前端技术搭建完整的数据大屏。
-
-项目当前阶段是纯前端实现，所有业务数据来自 mock。后续可以通过统一数据源配置平滑切换到真实 API。
+这是一个用于“大数据专题作业2”的数据中心运行监控大屏项目。项目会读取 `homework/` 文件夹中的作业数据，经过加工处理后写入 MySQL，并通过前后端联动展示 PC 端数据可视化大屏。
 
 ## 技术栈
 
-- Vue 3
-- Vite
-- TypeScript
-- ECharts
-- Pinia
-- Axios
-- MSW
-- Vitest
-- Playwright
-- ESLint
-- Prettier
-- Stylelint
+- 前端：Vue 3、Vite、TypeScript、ECharts、Pinia、Axios
+- 后端：Node.js、Express、MySQL2
+- 数据库：MySQL 8.0
+- Mock 与测试：MSW、Vitest、Playwright
+- 质量工具：ESLint、Prettier、Stylelint
+- 本地环境：Docker Compose
 
 ## 功能特性
 
-- 1920x1080 风格科技感数据大屏
-- 自适应浏览器窗口缩放
-- 顶部标题、当前时间、数据更新时间
-- 核心指标卡片
-- 访问趋势折线图
-- 分类占比饼图
-- 城市排名柱状图
-- 能力雷达图
-- 中心态势总览图
-- 实时动态列表
-- mock 数据与真实 API 数据源切换机制
-- 统一日志系统
-- 单元测试与 E2E 测试
-- 代码质量检查与格式化配置
+- 基于作业 `.dat` 数据导入 MySQL
+- 数据中心运行监控 PC 大屏
+- 主机总数、CPU、内存、磁盘、健康度核心指标
+- CPU / 内存 / 网络趋势图
+- 机房主机分布图
+- 主机负载排名
+- 资源健康雷达
+- 机房运行态势拓扑
+- 实时告警列表
+- 支持真实 API 与 mock 数据源切换
+- 包含单元测试、E2E 测试和代码质量检查
 
-## 快速开始
+## 数据文件
+
+作业数据放在本地：
+
+```text
+homework/
+  disk_tsar.dat
+  host_detail.dat
+  mod_detail.dat
+  pref_tsar.dat
+```
+
+`homework/` 默认不提交到 Git 仓库。导入脚本会从该目录读取数据。
+
+## 快速运行
+
+1. 安装依赖：
 
 ```bash
 npm install
-npm run dev
 ```
 
-默认访问地址：
+2. 启动 MySQL：
+
+```bash
+npm run db:up
+```
+
+3. 导入作业数据：
+
+```bash
+npm run db:seed
+```
+
+4. 同时启动后端 API 和前端：
+
+```bash
+npm run dev:all
+```
+
+5. 浏览器访问：
 
 ```text
 http://127.0.0.1:5173/
@@ -52,8 +74,23 @@ http://127.0.0.1:5173/
 ## 常用命令
 
 ```bash
-# 启动开发服务
+# 仅启动前端
 npm run dev
+
+# 启动后端 API
+npm run dev:server
+
+# 同时启动后端和前端
+npm run dev:all
+
+# 启动 MySQL
+npm run db:up
+
+# 停止 MySQL
+npm run db:down
+
+# 初始化表并导入 homework 数据
+npm run db:seed
 
 # 生产构建
 npm run build
@@ -80,91 +117,92 @@ npm run test:e2e
 npx playwright install chromium
 ```
 
-## 数据源切换
+## 环境变量
 
-项目默认使用 mock 数据：
+可参考 `.env.example`：
 
 ```env
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_NAME=datacenter_monitor
+DB_USER=datacenter
+DB_PASSWORD=datacenter_pass
+SERVER_PORT=3001
+VITE_DATA_SOURCE=api
+VITE_API_BASE_URL=/api
+```
+
+数据源切换：
+
+```env
+# 使用真实 MySQL API
+VITE_DATA_SOURCE=api
+
+# 使用前端 mock 数据
 VITE_DATA_SOURCE=mock
 ```
 
-切换到真实 API：
+## API
 
-```env
-VITE_DATA_SOURCE=api
-VITE_API_BASE_URL=https://your-api.example.com/api
+后端默认运行在：
+
+```text
+http://127.0.0.1:3001
 ```
 
-页面组件不会直接读取 mock 文件，统一通过 `src/services/dashboardService.ts` 获取数据。
+接口：
+
+- `GET /api/health`：数据库连接健康检查
+- `GET /api/dashboard`：返回大屏聚合数据
+
+前端开发服务已配置 `/api` 代理到后端。
+
+## 数据库结构
+
+核心表：
+
+- `hosts`：主机维表，来自 `host_detail.dat`
+- `metrics`：指标维表，来自 `mod_detail.dat`
+- `metric_points`：统一时序指标表，来自 `disk_tsar.dat` 和 `pref_tsar.dat`
+
+数据库 schema 位于：
+
+```text
+server/db/schema.sql
+```
 
 ## 目录结构
 
 ```text
+server/
+  db/                  # MySQL schema 与连接
+  scripts/             # homework 数据导入脚本
+  services/            # 数据查询与聚合
+  utils/               # TSV 解析工具
+
 src/
-  app/                 # 应用入口
+  app/                 # 前端应用入口
   assets/              # 静态资源与全局样式
   components/          # 通用展示组件
   charts/              # ECharts 图表组件
-  views/               # 页面视图
-  layouts/             # 大屏布局
-  services/            # HTTP 与业务服务
-  mocks/               # MSW mock 数据与接口处理
+  views/               # 大屏页面
+  layouts/             # 1920x1080 自适应布局
+  services/            # 前端 HTTP 与业务服务
+  mocks/               # MSW mock 数据
   stores/              # Pinia 状态管理
-  utils/               # 工具函数
+  utils/               # 前端工具函数
   logs/                # 日志系统
-  types/               # TypeScript 类型定义
-  tests/
-    unit/              # Vitest 单元测试
-    e2e/               # Playwright E2E 测试
+  types/               # 前端类型定义
+  tests/               # 单元测试与 E2E 测试
 ```
-
-## 日志系统
-
-日志入口位于：
-
-```text
-src/logs/logger.ts
-```
-
-当前支持：
-
-- `logger.info`
-- `logger.warn`
-- `logger.error`
-- `logger.debug`
-
-开发环境会输出到 console，后续可以在这里扩展 Sentry、OpenTelemetry 或其他日志平台。
-
-## Mock 数据
-
-mock 数据入口：
-
-```text
-src/mocks/dashboardMock.ts
-```
-
-MSW 接口处理：
-
-```text
-src/mocks/handlers.ts
-```
-
-当前 mock 数据包含：
-
-- summary metrics
-- trend data
-- category distribution
-- ranking data
-- radar data
-- activity list
-- map overview data
 
 ## 测试说明
 
 单元测试覆盖：
 
 - 格式化工具函数
-- mock 模式下的 dashboardService 数据读取
+- dashboardService 数据读取
+- 后端数据聚合逻辑
 
 E2E 测试覆盖：
 
@@ -174,17 +212,6 @@ E2E 测试覆盖：
 - 至少一个图表容器存在
 - 页面无严重运行错误
 
-## 教学建议
+## Git 提交说明
 
-推荐学习顺序：
-
-1. 从 `src/views/DashboardView.vue` 理解整体页面结构。
-2. 查看 `src/services/dashboardService.ts`，理解组件如何通过服务层获取数据。
-3. 查看 `src/mocks/dashboardMock.ts` 和 `src/mocks/handlers.ts`，理解 mock 数据流。
-4. 查看 `src/charts/useEChart.ts`，理解 ECharts 在 Vue 组件中的初始化、更新和销毁。
-5. 查看 `src/stores/dashboardStore.ts`，理解 Pinia 如何管理页面状态。
-6. 运行 `npm run test` 和 `npm run test:e2e`，理解测试系统如何保护项目质量。
-
-## 许可
-
-本项目用于教学演示，可按你的开源计划补充具体 License。
+`homework/` 原始数据被 `.gitignore` 忽略，不会提交到远端仓库。提交内容包括可运行代码、数据库 schema、导入脚本、配置模板和文档。
